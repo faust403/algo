@@ -124,7 +124,7 @@ void remove_node(struct List* list, struct ListNode* node)
     }
 }
 
-struct ListNode *find_in_list(const struct List *list, const char *value)
+const struct ListNode *find_in_list(const struct List *list, const char *value)
 {
     if(list == NULL || list->head == NULL)
         return NULL;
