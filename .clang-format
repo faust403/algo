@@ -1,0 +1,12 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+
+Language: Cpp
+Language: C
+
+AlignArrayOfStructures: AIAS_Right
+AlignConsecutiveAssignments: ACS_AcrossComments
+AlignConsecutiveBitFields: ACS_AcrossComments
+AlignConsecutiveMacros: Consecutive
+
+IndentLef

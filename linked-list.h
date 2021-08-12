@@ -5,136 +5,161 @@
 #include <string.h>
 #include <stdio.h>
 
-struct ListNode
+struct Node
 {
-    char *value;
+    	char *value;
+	char *key;
 
-    struct ListNode *next;
+	struct Node *next;
 };
 
 struct List
 {
-    struct ListNode *head;
+    	struct Node *head;
 };
 
 struct List *create_list()
 {
-    struct List *result = (struct List *)malloc(sizeof(struct List));
-    result->head = NULL;
+    	struct List *result = (struct List *)malloc(sizeof(struct List));
+    	result->head = NULL;
 
-    return result;
-}
-
-void free_list(struct List *list)
-{
-    
+    	return result;
 }
 
 void add_to_list(struct List *list, const char *value)
 {
-    if(list == NULL)
-        return;
+    	if(list == NULL)
+        	return;
 
-    if(value == NULL)
-        return;
+    	if(value == NULL)
+        	return;
 
-    struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
-    node->value = (char *)malloc(strlen(value) + 1);
-    strcpy(node->value, value);
+    	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+    	node->value = (char *)malloc(strlen(value) + 1);
+    	strcpy(node->value, value);
 
-    node->next = list->head;
+    	node->next = list->head;
 
-    list->head = node;
+    	list->head = node;
 }
 
 void print_list(struct List *list)
 {
-    if(list == NULL)
-        return;
+    	if(list == NULL)
+        	return;
 
-    struct ListNode* node = list->head;
+    	struct Node* node = list->head;
 
-    while(node != NULL) {
-        puts(node->value);
-        node = node->next;
-    }
+    	while(node != NULL) {
+        	puts(node->value);
+        	node = node->next;
+    	}
 }
 
 void remove_at(struct List *list, size_t pos)
 {
-    if(list == NULL || list->head == NULL)
-        return;
+    	if(list == NULL || list->head == NULL)
+        	return;
 
-    if(pos == 0) {
-        struct ListNode *node = list->head;
+    	if(pos == 0) {
+        	struct Node *node = list->head;
         
-        list->head = node->next;
+        	list->head = node->next;
         
-        free(node->value);
-        free(node);
+        	free(node->value);
+        	free(node);
 
-        return;
-    }
+        	return;
+    	}
 
-    struct ListNode *previous_node = list->head;
-    struct ListNode *current_node = previous_node->next;
+    	struct Node *previous_node = list->head;
+    	struct Node *current_node = previous_node->next;
 
-    for (size_t i = 1; i < pos; i++) {
-        if(current_node == NULL)
-            return;
+    	for (size_t i = 1; i < pos; i++) {
+        	if(current_node == NULL)
+            	return;
 
-        previous_node = current_node;
-        current_node = current_node->next;
-    }
+        	previous_node = current_node;
+        	current_node = current_node->next;
+    	}
 
-    previous_node->next = current_node->next;
+    	previous_node->next = current_node->next;
     
-    free(current_node->value);
-    free(current_node);
+    	free(current_node->value);
+    	free(previous_node->value);
+    	free(current_node);
+    	free(previous_node);
 }
 
-void remove_node(struct List* list, struct ListNode* node)
+struct Node * create_node(const char * key, const char * value)
 {
-    if(list == NULL || list->head == NULL)
-        return;
-
-    if(node == list->head)
-    {
-        list->head = node->next;
-
-        free(node->value);
-        free(node);
-
-        return;
-    }
-
-    struct ListNode *previous_node = list->head;
-    struct ListNode *current_node = previous_node->next;
-
-    while(current_node != NULL && current_node != node) {
-        previous_node = current_node;
-        current_node = current_node->next;
-    }
-
-    if(current_node != NULL) {
-        previous_node->next = current_node->next;
-
-        free(current_node->value);
-        free(current_node);
-    }
+	struct Node * node;
+	node->key = key;
+	node->value = value;
+	node->next = NULL;
+	
+	return node;
 }
 
-const struct ListNode *find_in_list(const struct List *list, const char *value)
+void remove_node(struct List* list, struct Node* node)
 {
-    if(list == NULL || list->head == NULL)
-        return NULL;
+    	if(list == NULL || list->head == NULL)
+        	return;
+
+    	if(node == list->head)
+    	{
+        	list->head = node->next;
+
+        	free(node->value);
+        	free(node);
+
+       		return;
+    	}
+
+    	struct Node *previous_node = list->head;
+    	struct Node *current_node = previous_node->next;
+
+    	while(current_node != NULL && current_node != node) {
+        	previous_node = current_node;
+        	current_node = current_node->next;
+   	}
+
+    	if(current_node != NULL) {
+        	previous_node->next = current_node->next;
+
+        	free(current_node->value);
+        	free(current_node);
+    	}
+}
+
+void free_list(struct List *list)
+{
+        struct Node * previousNode = list->head;
+	struct Node * currentNode = previousNode->next;
+
+        while(currentNode != NULL)
+        {
+		free(previousNode->value);
+		free(previousNode);
+
+		previousNode = currentNode;
+		currentNode = currentNode->next;
+        }
+	free(currentNode->value);
+	free(currentNode);
+}
+
+struct Node *find_in_list(const struct List *list, const char *value)
+{
+    	if(list == NULL || list->head == NULL)
+        	return NULL;
     
-    const struct ListNode *node = list->head;
+    	struct Node *node = list->head;
 
-    while(node != NULL && strcmp(value, node->value) != 0)
-        node = node->next;
+    	while(node != NULL && strcmp(value, node->value) != 0)
+        	node = node->next;
 
-    return node;
+    	return node;
 }
 
 #endif

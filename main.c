@@ -1,23 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include "linked-list.h"
+#include "hash-table.h"
 
 int main()
 {
-    struct List *list = create_list();
-    add_to_list(list, "value1");
-    add_to_list(list, "value2");
-    add_to_list(list, "value3");
-    add_to_list(list, "value4");
-    add_to_list(list, "value5");
+	struct Node * hash_table[1024] = create_hash_table();
+	add_to_table(hash_table, create_list());
+	add_to_table(hash_table, create_node("key1", "value1"));
+	add_to_table(hash_table, create_node("key2", "value2"));
 
-    /* print_list(list); */
-
-    /* remove_from_list(list, 1); */
-
-    struct ListNode *node = find_in_list(list, "value2");
-    puts(node->value);
-
-    /* print_list(list); */
-    return 0;
+	return 0;
 }

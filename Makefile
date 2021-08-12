@@ -1,9 +1,9 @@
-SOURCES=hash-table.cpp
+SOURCES=hash-table.h linked-list.h main.c
 EXECUTABLE=main
 
 LDFLAGS=
 
-CC=g++
+CC=gcc
 CFLAGS=-c -Wall
 OBJECTS=$(SOURCES:.c=.o)
 
