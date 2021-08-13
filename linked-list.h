@@ -8,7 +8,6 @@
 struct Node
 {
     	char *value;
-	char *key;
 
 	struct Node *next;
 };
@@ -26,7 +25,7 @@ struct List *create_list()
     	return result;
 }
 
-void add_to_list(struct List *list, const char *value)
+void add_to_list(struct List *list, char *value)
 {
     	if(list == NULL)
         	return;
@@ -91,10 +90,9 @@ void remove_at(struct List *list, size_t pos)
     	free(previous_node);
 }
 
-struct Node * create_node(const char * key, const char * value)
+struct Node *create_node(char *value)
 {
-	struct Node * node;
-	node->key = key;
+	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
 	node->value = value;
 	node->next = NULL;
 	
@@ -132,21 +130,51 @@ void remove_node(struct List* list, struct Node* node)
     	}
 }
 
-void free_list(struct List *list)
+void clear_list(struct List *list)
 {
-        struct Node * previousNode = list->head;
-	struct Node * currentNode = previousNode->next;
+	if(list == NULL || list->head == NULL) 
+        	return;
 
-        while(currentNode != NULL)
+        struct Node * previousNode = list->head->next; //Голову не зануляем
+	struct Node * currentNode = previousNode->next;
+        
+        while(currentNode != NULL)      
         {
-		free(previousNode->value);
-		free(previousNode);
+                free(previousNode->value);
+                free(previousNode);
 
 		previousNode = currentNode;
 		currentNode = currentNode->next;
         }
 	free(currentNode->value);
 	free(currentNode);
+	list->head = NULL;
+	list = NULL;
+}
+
+void free_list(struct List *list)
+{
+	if(list->head == NULL || list == NULL)
+	{
+		free(list);
+		return;
+	}
+
+	clear_list(list);
+	free(list);
+}
+
+int list_size(struct List *list)
+{
+	int counter = 0;
+	struct Node *node = list->head;
+
+	while(node != NULL)
+	{
+		counter++;
+		node = node->next;
+	}
+	return counter;
 }
 
 struct Node *find_in_list(const struct List *list, const char *value)

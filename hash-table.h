@@ -1,5 +1,5 @@
-#ifndef __LINKED_LIST_H__
-#define __LINKED_LIST_H__
+#ifndef __HASH_TABLE_H__
+#define __HASH_TABLE_H__
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,13 +18,14 @@ unsigned int hash(const char* str)
   	return result;
 }
 
-struct Node** create_hash_table()
+struct List** create_hash_table()
 {
-	struct Node *hash_table[1024];
+	struct List *hash_table = (struct List *)malloc(1024);
 	
 	int iter = 0;
 	while(iter < 1024)
 	{
+		hash_table[iter]->head = NULL;
 		hash_table[iter] = NULL;
 	}
 	return hash_table;
@@ -40,32 +41,28 @@ void add_to_table(struct Node *hash_table[1024], struct Node * node)
 	}
 }
 
-void add(const char *key, const char *value, struct Node *hash_table[1024])
+void add(const char *key, char *value, struct List *hash_table[1024])
 {
   	unsigned int index = hash(key) % 1024;
-	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
-
-  	node->key = (char *)malloc(strlen(key) + 1);
-  	strcpy(node->key, key);
-
-  	node->value = (char *)malloc(strlen(value) + 1);
-  	strcpy(node->value, value);
+	struct Node *node = create_node(value);
 
   	node->next = NULL;
 
   	if (hash_table[index] == NULL) {
-    		hash_table[index] = node;
+    		add_to_list(hash_table[index], value);
   	}
   	else {
-    		struct Node *current = hash_table[index];
-    		while (current->next != NULL)
-      			current = current->next;
+    		struct List *currentList = hash_table[index];
+		struct Node *currentNode = currentList->head;
 
-    		current->next = node;
+    		while (currentNode->next != NULL)
+      			currentNode = currentNode->next;
+
+    		currentNode->next = node;
   	}	
 }
 
-struct Node *find_node(const char *key, struct Node *hash_table[1024])
+struct Node *find_node(const char *key, struct List *hash_table[1024])
 {
   	unsigned int index = hash(key) % 1024;
   	struct List * list = hash_table[index];
@@ -73,9 +70,9 @@ struct Node *find_node(const char *key, struct Node *hash_table[1024])
   	return find_in_list(list, key); 
 }
 
-char *find_value(const char *key)
+char *find_value(const char *key, struct List *hash_table[1024])
 {
-  	struct Node *node = find_node(key);
+  	struct Node *node = find_node(key, hash_table);
 
   	if (node == NULL)
     		return NULL;
