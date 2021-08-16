@@ -42,6 +42,40 @@ struct Tree * create_tree(unsigned int key, char * value)
 	return tree;
 }
 
+void _insert_node(struct Node* node, unsigned int key, const char* value)
+{
+	if (key == node->key)
+		return;
+
+	if (key > node->key) {
+		if (node->childRight == NULL)
+			node->childRight = create_node(node, key, value);
+		else
+			_insert_node(node->childRight, key, value);
+
+		return;
+	}
+
+	if (node->childLeft == NULL)
+		node->childLeft = create_node(node, key, value);
+	else
+		_insert_node(node->childLeft, key, value);
+}
+
+void insert_to_tree2(struct Tree *tree, unsigned int key, const char *value)
+{
+	if (tree == NULL)
+		return;
+
+	if (tree->head == NULL) {
+		tree->head = create_node(NULL, key, value);
+
+		return;
+	}
+
+	_insert_node(tree->head, key, value);
+}
+
 void insert_to_tree(struct Tree * tree, unsigned int key, char * value)
 {
 	if(tree == NULL || tree->head == NULL)
