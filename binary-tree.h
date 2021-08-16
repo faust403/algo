@@ -19,16 +19,6 @@ struct Tree
 	struct Node * head;
 };
 
-struct Tree * create_tree()
-{
-	struct Tree * tree = (struct Tree *)malloc(sizeof(struct Tree));
-
-	tree->head->childRight = NULL;
-	tree->head->childLeft = NULL;
-	tree->head = NULL;
-	return tree;
-}
-
 struct Node * create_node(struct Node * parent, unsigned int key, char * value)
 {
 	struct Node * node = (struct Node *)malloc(sizeof(struct Node));
@@ -42,15 +32,19 @@ struct Node * create_node(struct Node * parent, unsigned int key, char * value)
 	return node;
 }
 
+struct Tree * create_tree(unsigned int key, char * value)
+{                                                               struct Tree * tree = (struct Tree *)malloc(sizeof(struct Tree));
+                                                                tree->head = create_node(NULL, key, value);
+	tree->head->childRight = NULL;
+	tree->head->childLeft = NULL;
+
+	return tree;
+}
+
 void insert_to_tree(struct Tree * tree, unsigned int key, char * value)
 {
-	if(tree == NULL)
+	if(tree == NULL || tree->head == NULL)
 		return;
-	if(tree->head == NULL)
-	{
-		tree->head = create_node(NULL, key, value);
-		return;
-	}
 
 	struct Node * currentNode = tree->head;
 
@@ -60,8 +54,10 @@ void insert_to_tree(struct Tree * tree, unsigned int key, char * value)
 		{
 			if(currentNode->childRight != NULL)
 			{
-				currentNode = currentNode->childRight;
-				continue;
+				struct Node * newNode = create_node(currentNode, key, value);
+				newNode->childRight = currentNode->childRight;
+				currentNode->childRight = newNode;
+				return;
 			}
 			currentNode->childRight = create_node(currentNode, key, value);
 			return;
@@ -69,8 +65,9 @@ void insert_to_tree(struct Tree * tree, unsigned int key, char * value)
 		{
 			if(currentNode->childLeft != NULL)
 			{
-				currentNode = currentNode->childLeft;
-				continue;
+				struct Node * newNode = create_node(currentNode, key, value);
+				newNode->childLeft = currentNode->childLeft;
+				currentNode->childLeft = newNode;
 			}
 			currentNode->childLeft = create_node(currentNode, key, value);
 			return;
@@ -79,6 +76,32 @@ void insert_to_tree(struct Tree * tree, unsigned int key, char * value)
 			currentNode->value = value;	
 		}
 	}
+}
+
+struct Node * find_node(struct Tree * tree, unsigned int key)
+{
+	if(tree == NULL)
+		return NULL;
+	struct Node * currentNode = tree->head;
+	while(currentNode != NULL)
+	{
+		if(currentNode->key < key)
+		{
+			currentNode = currentNode->childRight;
+		} else if(currentNode->key > key)
+		{
+			currentNode = currentNode->childLeft;
+		} else if(currentNode->key == key)
+			return currentNode;
+	}
+	return NULL;
+}
+
+char * find_value(struct Tree * tree, unsigned int key)
+{
+	if(find_node(tree, key) == NULL)
+		return NULL;
+	return find_node(tree, key)->value;
 }
 
 void remove_from_tree(struct Tree * tree, char * key);
