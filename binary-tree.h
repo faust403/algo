@@ -33,8 +33,9 @@ struct Node * create_node(struct Node * parent, unsigned int key, char * value)
 }
 
 struct Tree * create_tree(unsigned int key, char * value)
-{                                                               struct Tree * tree = (struct Tree *)malloc(sizeof(struct Tree));
-                                                                tree->head = create_node(NULL, key, value);
+{                                                               
+	struct Tree * tree = (struct Tree *)malloc(sizeof(struct Tree));
+        tree->head = create_node(NULL, key, value);
 	tree->head->childRight = NULL;
 	tree->head->childLeft = NULL;
 
@@ -54,10 +55,14 @@ void insert_to_tree(struct Tree * tree, unsigned int key, char * value)
 		{
 			if(currentNode->childRight != NULL)
 			{
-				struct Node * newNode = create_node(currentNode, key, value);
-				newNode->childRight = currentNode->childRight;
-				currentNode->childRight = newNode;
-				return;
+				if(currentNode->childRight->key > key){
+					struct Node * newNode = create_node(currentNode, key, value);
+					newNode->childRight = currentNode->childRight;
+					currentNode->childRight = newNode;
+					return;
+				}
+				currentNode = currentNode->childRight;
+				continue;
 			}
 			currentNode->childRight = create_node(currentNode, key, value);
 			return;
@@ -65,15 +70,22 @@ void insert_to_tree(struct Tree * tree, unsigned int key, char * value)
 		{
 			if(currentNode->childLeft != NULL)
 			{
-				struct Node * newNode = create_node(currentNode, key, value);
-				newNode->childLeft = currentNode->childLeft;
-				currentNode->childLeft = newNode;
+				if(currentNode->childLeft->key < key)
+				{
+					struct Node * newNode = create_node(currentNode, key, value);
+					newNode->childLeft = currentNode->childLeft;
+					currentNode->childLeft = newNode;
+					return;
+				}
+				currentNode = currentNode->childLeft;
+				continue;
 			}
 			currentNode->childLeft = create_node(currentNode, key, value);
 			return;
 		} else if(currentNode->key == key)
 		{
-			currentNode->value = value;	
+			currentNode->value = value;
+			return;
 		}
 	}
 }

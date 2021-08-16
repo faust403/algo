@@ -166,6 +166,8 @@ void free_list(struct List *list)
 
 int list_size(struct List *list)
 {
+	if(list == NULL) return 0;
+
 	int counter = 0;
 	struct Node *node = list->head;
 
