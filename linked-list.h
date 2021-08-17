@@ -30,9 +30,6 @@ void add_to_list(struct List *list, char *value)
     	if(list == NULL)
         	return;
 
-    	if(value == NULL)
-        	return;
-
     	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
     	node->value = (char *)malloc(strlen(value) + 1);
     	strcpy(node->value, value);
@@ -44,7 +41,7 @@ void add_to_list(struct List *list, char *value)
 
 void print_list(struct List *list)
 {
-    	if(list == NULL)
+    	if(list == NULL || list->head == NULL)
         	return;
 
     	struct Node* node = list->head;
@@ -53,6 +50,7 @@ void print_list(struct List *list)
         	puts(node->value);
         	node = node->next;
     	}
+	free(node);
 }
 
 void remove_at(struct List *list, size_t pos)
@@ -65,11 +63,22 @@ void remove_at(struct List *list, size_t pos)
         
         	list->head = node->next;
         
-        	free(node->value);
+         	free(node->value);
         	free(node);
 
         	return;
     	}
+	if(pos == 0)
+	{
+		struct Node * node = (struct Node *)malloc(sizeof(struct Node));
+		node->next = list->head;
+
+		list->head = list->head->next;
+
+		free(node->next);
+		free(node);
+		return;
+	}
 
     	struct Node *previous_node = list->head;
     	struct Node *current_node = previous_node->next;
@@ -135,8 +144,8 @@ void clear_list(struct List *list)
 	if(list == NULL || list->head == NULL) 
         	return;
 
-        struct Node * previousNode = list->head->next; //Голову не зануляем
-	struct Node * currentNode = previousNode->next;
+        struct Node * previousNode = list->head;
+	struct Node * currentNode = list->head->next;
         
         while(currentNode != NULL)      
         {
@@ -146,10 +155,11 @@ void clear_list(struct List *list)
 		previousNode = currentNode;
 		currentNode = currentNode->next;
         }
-	free(currentNode->value);
 	free(currentNode);
+
+	free(list->head->value);
+	free(list->head);
 	list->head = NULL;
-	list = NULL;
 }
 
 void free_list(struct List *list)

@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="binary-tree.h" />
+    <ClInclude Include="hash-table.h" />
     <ClInclude Include="linked-list.h" />
   </ItemGroup>
   <ItemGroup>

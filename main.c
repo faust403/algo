@@ -1,12 +1,29 @@
 #include <stdio.h>
-#include "binary-tree.h"
+#include "linked-list.h"
 
 int main()
 {
-	struct Tree * tree = create_tree();
-	insert_to_tree(tree, 10, "value");
-	insert_to_tree(tree, 12, "value2");
-	remove_from_tree(tree, 12);
-	printf("%s", find_value(tree, 12));
+	struct List * list = create_list();
+	add_to_list(list, "value1");
+	add_to_list(list, "value2");
+
+	printf("print after add\n");
+	print_list(list);
+
+	remove_at(list, 0);
+
+	printf("print after remove node\n");
+	print_list(list);
+
+	clear_list(list);
+
+	printf("print after cleaning\n");
+	print_list(list);
+
+	free_list(list);
+
+	printf("print after free\n");
+	list = create_list();
+	print_list(list);
 	return 0;
 }

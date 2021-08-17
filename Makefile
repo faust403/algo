@@ -1,4 +1,4 @@
-SOURCES=hash-table.h linked-list.h main.c
+SOURCES= linked-list.h main.c
 EXECUTABLE=main
 
 LDFLAGS=
