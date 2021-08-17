@@ -32,20 +32,23 @@ struct Node * create_node(struct Node * parent, unsigned int key, char * value)
 	return node;
 }
 
-struct Tree * create_tree(unsigned int key, char * value)
+struct Tree * create_tree()
 {                                                               
 	struct Tree * tree = (struct Tree *)malloc(sizeof(struct Tree));
-        tree->head = create_node(NULL, key, value);
-	tree->head->childRight = NULL;
-	tree->head->childLeft = NULL;
+	tree->head = NULL;
 
 	return tree;
 }
 
 void insert_to_tree(struct Tree * tree, unsigned int key, char * value)
 {
-	if(tree == NULL || tree->head == NULL)
+	if(tree == NULL)
 		return;
+	if(tree->head == NULL)
+	{
+		tree->head = create_node(NULL, key, value);
+		return;
+	}
 
 	struct Node * currentNode = tree->head;
 
@@ -100,9 +103,11 @@ struct Node * find_node(struct Tree * tree, unsigned int key)
 		if(currentNode->key < key)
 		{
 			currentNode = currentNode->childRight;
+			continue;
 		} else if(currentNode->key > key)
 		{
 			currentNode = currentNode->childLeft;
+			continue;
 		} else if(currentNode->key == key)
 			return currentNode;
 	}
@@ -115,7 +120,4 @@ char * find_value(struct Tree * tree, unsigned int key)
 		return NULL;
 	return find_node(tree, key)->value;
 }
-
-void remove_from_tree(struct Tree * tree, char * key);
-
 #endif

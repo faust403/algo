@@ -3,9 +3,10 @@
 
 int main()
 {
-	struct Tree * tree = create_tree(1, "value1");
-	insert_to_tree(tree, 2, "value2");
-	insert_to_tree(tree, 1, "new value");
-	printf("%s", find_value(tree, 1));
+	struct Tree * tree = create_tree();
+	insert_to_tree(tree, 10, "value");
+	insert_to_tree(tree, 12, "value2");
+	remove_from_tree(tree, 12);
+	printf("%s", find_value(tree, 12));
 	return 0;
 }
