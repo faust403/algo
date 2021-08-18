@@ -21,9 +21,13 @@
   <ItemGroup>
     <ClInclude Include="binary-tree.h" />
     <ClInclude Include="hash-table.h" />
+    <ClInclude Include="hash.h" />
     <ClInclude Include="linked-list.h" />
+    <ClInclude Include="list.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="hash.c" />
+    <ClCompile Include="list.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
