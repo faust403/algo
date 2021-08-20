@@ -26,7 +26,7 @@ static struct Pair* pair_create(const char* key, const char* value)
 
 inline static size_t pair_size(const struct Pair* pair)
 {
-	return pair->key_size + strlen(pair->key_value + pair->key_size);
+	return sizeof(size_t) + pair->key_size + strlen(pair->key_value + pair->key_size) + 1;
 }
 
 inline static const char* pair_key(const struct Pair* pair)
@@ -56,9 +56,9 @@ static struct ListNode* create_node_pair(const void* value)
 	return result;
 }
 
-static int compare_pair(const void* a, const void* b)
+static int compare_pair_with_key(const void* a, const void* b)
 {
-	return strcmp(pair_key(a), pair_key(b));
+	return strcmp(pair_key(a), b);
 }
 
 struct Hash* hash_create_string()
@@ -75,7 +75,7 @@ struct Hash* hash_create_string()
 	for (size_t i = 0; i < initial_size; i++) {
 		result->table[i].head = 0;
 		result->table[i].create = create_node_pair;
-		result->table[i].compare = compare_pair;
+		result->table[i].compare = compare_pair_with_key;
 	}
 
 	return result;
@@ -100,9 +100,8 @@ static void insert_or_update_pair(struct List* list, struct Pair* pair)
 		list_change_node(list, old_node, new_node);
 		free(old_node);
 	}
-	else {
+	else
 		list_add(list, pair);
-	}
 }
 
 void hash_set(struct Hash* hash, const char* key, const void* value)
@@ -118,8 +117,64 @@ void hash_set(struct Hash* hash, const char* key, const void* value)
 	pair_free(pair);
 }
 
-int hash_try_get(struct Hash* hash, const char* key, void* value);
-void hash_for_each(struct Hash* hash, void (*proc)(const void* key, const void* value));
-void hash_free();
+int hash_try_get(struct Hash* hash, const char* key, const char** value_ref)
+{
+	if (hash == 0 || key == 0)
+		return 0;
 
+	size_t index = compute_hash(key) % hash->capacity;
+	struct List* list = hash->table + index;
 
+	struct ListNode* node;
+	if (list_try_find(list, key, &node) != 0) {
+		if (value_ref != 0)
+			*value_ref = pair_value((const struct Pair*)node->value);
+
+		return 1;
+	}
+
+	return 0;
+}
+
+void hash_for_each(struct Hash* hash, void (*proc)(const void* key, const void* value))
+{
+	if (hash == 0)
+		return;
+
+	for (size_t i = 0; i < hash->capacity; i++) {
+		struct ListNode* node = hash->table[i].head;
+
+		while (node != 0) {
+			struct Pair* pair = node->value;
+			const char* key = pair_key(pair);
+			const char* value = pair_value(pair);
+
+			proc(key, value);
+
+			node = node->next;
+		}
+	}
+}
+
+static void free_node(struct ListNode* node)
+{
+	if (node == 0)
+		return;
+
+	free_node(node->next);
+	free(node);
+}
+
+void hash_free(struct Hash* hash)
+{
+	if (hash == 0)
+		return;
+
+	for (size_t i = 0; i < hash->capacity; i++) {
+		struct ListNode* node = hash->table[i].head;
+
+		free_node(node);
+	}
+
+	free(hash);
+}

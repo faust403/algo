@@ -13,8 +13,8 @@ struct Hash
 
 struct Hash* hash_create_string();
 void hash_set(struct Hash* hash, const char* key, const void* value);
-int hash_try_get(struct Hash* hash, const char* key, void* value);
+int hash_try_get(struct Hash* hash, const char* key, const char** value_ref);
 void hash_for_each(struct Hash* hash, void (*proc)(const void* key, const void* value));
-void hash_free();
+void hash_free(struct Hash* hash);
 
 #endif

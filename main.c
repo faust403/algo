@@ -5,6 +5,7 @@
 #include <stdlib.h>
 //#include "linked-list.h"
 #include "list.h"
+#include "hash.h"
 
 void list_add_int(struct List* list, int value)
 {
@@ -31,32 +32,51 @@ void print_double(const void* value)
 	printf("%lf\n", *(const double*)value);
 }
 
+void print_key_value(const char* key, const char* value)
+{
+	printf("%s: %s\n", key, value);
+}
+
 int main()
 {
-	struct List* l3 = list_create_string();
-	list_add_string(l3, "foo");
-	list_add_string(l3, "bar");
-	list_add_string(l3, "baz");
-	list_add_string(l3, "qux");
-	list_add_string(l3, "quxx");
-	list_for_each(l3, puts);
+	struct Hash* hash = hash_create_string();
 
-	struct ListNode* old_node;
-	if (list_try_find(l3, "baz", &old_node)) {
-		size_t buffer_size = strlen("zab") + 1;
-		struct ListNode* new_node = (struct ListNode*)malloc(sizeof(struct ListNode) + buffer_size);
+	hash_set(hash, "foo", "123");
+	hash_set(hash, "bar", "456");
+	hash_set(hash, "baz", "789");
 
-		if (new_node != 0) {
-			new_node->next = 0;
-			strcpy_s(&new_node->value[0], buffer_size, "zab");
+	char* value;
+	if (hash_try_get(hash, "bar", &value))
+		puts(value);
 
-			list_change_node(l3, old_node, new_node);
-			free(old_node);
-		}
-	}
+	hash_for_each(hash, print_key_value);
 
-	list_for_each(l3, puts);
-	list_free(l3);
+	hash_free(hash);
+
+	//struct List* l3 = list_create_string();
+	//list_add_string(l3, "foo");
+	//list_add_string(l3, "bar");
+	//list_add_string(l3, "baz");
+	//list_add_string(l3, "qux");
+	//list_add_string(l3, "quxx");
+	//list_for_each(l3, puts);
+
+	//struct ListNode* old_node;
+	//if (list_try_find(l3, "baz", &old_node)) {
+	//	size_t buffer_size = strlen("zab") + 1;
+	//	struct ListNode* new_node = (struct ListNode*)malloc(sizeof(struct ListNode) + buffer_size);
+
+	//	if (new_node != 0) {
+	//		new_node->next = 0;
+	//		strcpy_s(&new_node->value[0], buffer_size, "zab");
+
+	//		list_change_node(l3, old_node, new_node);
+	//		free(old_node);
+	//	}
+	//}
+
+	//list_for_each(l3, puts);
+	//list_free(l3);
 	//struct List* l1 = list_create_int();
 	//struct List* l2 = list_create_double();
 

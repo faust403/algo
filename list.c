@@ -108,18 +108,7 @@ void list_add(struct List* list, void* value)
 
 int list_contains(struct List* list, const void* value)
 {
-	if (list == 0 || value == 0)
-		return 0;
-
-	struct ListNode* node = list->head;
-	while (node != 0) {
-		if (list->compare(node->value, value) == 0)
-			return 1;
-
-		node = node->next;
-	}
-
-	return 0;
+	return list_try_find(list, value, 0);
 }
 
 int list_try_find(struct List* list, const void* value, struct ListNode** node_ref)
@@ -130,7 +119,9 @@ int list_try_find(struct List* list, const void* value, struct ListNode** node_r
 	struct ListNode* node = list->head;
 	while (node != 0) {
 		if (list->compare(node->value, value) == 0) {
-			*node_ref = node;
+			if (node_ref != 0)
+				*node_ref = node;
+
 			return 1;
 		}
 
