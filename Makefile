@@ -1,4 +1,4 @@
-SOURCES= linked-list.h main.c
+SOURCES= ./struct/singleLink-list/list.c ./struct/hash-table/hash.c ./algorithm/bubble-sort.c main.c
 EXECUTABLE=main
 
 LDFLAGS=

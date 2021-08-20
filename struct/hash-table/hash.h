@@ -2,7 +2,7 @@
 #define _HASH_H_
 
 #include <stdlib.h>
-#include "list.h"
+#include "../singleLink-list/list.h"
 
 struct Hash
 {
