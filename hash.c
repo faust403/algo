@@ -145,7 +145,7 @@ void hash_for_each(struct Hash* hash, void (*proc)(const void* key, const void* 
 		struct ListNode* node = hash->table[i].head;
 
 		while (node != 0) {
-			struct Pair* pair = node->value;
+			struct Pair* pair = (struct Pair*)node->value;
 			const char* key = pair_key(pair);
 			const char* value = pair_value(pair);
 

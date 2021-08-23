@@ -1,7 +1,104 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <malloc.h>
 #include <string.h>
 
 #include "list.h"
+
+struct StringList* string_list_create() 
+{
+	struct StringList* list = (struct StringList*)malloc(sizeof(struct StringList));
+	if (list == NULL)
+		return NULL;
+
+	list->head = NULL;
+
+	return list;
+}
+
+void string_list_add(struct StringList* list, const char* value) 
+{
+	if (list == NULL)
+		return;
+
+	size_t value_size = strlen(value) + 1;
+	struct StringListNode* node = (struct StringListNode*)malloc(sizeof(struct StringListNode) + value_size);
+	if (node == NULL)
+		return;
+
+	strcpy(node->value, value);
+
+	node->next = list->head;
+	list->head = node;
+}
+
+int string_list_try_find(struct StringList* list, const char* value, struct StringListNode** node_ref)
+{
+	if (list == NULL)
+		return 0;
+
+	struct StringListNode* node = list->head;
+	while (node != NULL) {
+		if (strcmp(node->value, value) == 0)
+		{
+			if (node_ref != NULL)
+				*node_ref = node;
+
+			return 1;
+		}
+
+		node = node->next;
+	}
+
+	return 0;
+}
+
+struct IntList* int_list_create()
+{
+	struct IntList* intlist = (struct IntList*)malloc(sizeof(struct IntList));
+	if (intlist == NULL)
+		return NULL;
+
+	intlist->head = NULL;
+
+	return intlist;
+}
+
+void int_list_add(struct IntList* list, int value)
+{
+	if (list == NULL)
+		return;
+	
+	struct IntListNode* node = (struct IntListNode*)malloc(sizeof(struct IntListNode));
+	if (node == NULL)
+		return;
+	
+	node->value = value;
+	node->next = list->head;
+	list->head = node;
+}
+
+int int_list_try_find(struct IntList* list, int value, struct IntListNode** node_ref)
+{
+	if (list == NULL)
+		return 0;
+
+	struct IntListNode* node = list->head;
+	while (node != NULL) {
+		if (node->value == value)
+		{
+			if (node_ref != NULL)
+				*node_ref = node;
+
+			return 1;
+		}
+
+		node = node->next;
+	}
+
+	return 0;
+}
+
 
 static struct ListNode* create_node_int(const void* value)
 {
