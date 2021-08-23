@@ -7,23 +7,118 @@
 #include "list.h"
 #include "hash.h"
 
-int main()
+void int_bubble_sort(int* array, size_t length)
 {
-	struct StringList* list = string_list_create();
-	char buffer[1000];
+	for (size_t last = length - 1; last > 0; last--) {
+		for (size_t i = 0; i < last; i++) {
+			if (array[i] > array[i + 1]) {
+				int tmp = array[i];
+				array[i] = array[i + 1];
+				array[i + 1] = tmp;
+			}
+		}
+	}
+}
 
-	while (1) {
-		gets(buffer);
+void string_bubble_sort(const char** array, size_t length) {
+	for (size_t last = length - 1; last > 0; last--) {
+		for (size_t i = 0; i < last; i++) {
+			if (strcmp(array[i], array[i + 1]) > 0) {
+				const char* tmp = array[i];
+				array[i] = array[i + 1];
+				array[i + 1] = tmp;
+			}
+		}
+	}
+}
 
-		if (strcmp(buffer, "") == 0)
-			break;
+void bubble_sort(void* array, size_t length, size_t size, int (*compare)(void*, void*))
+{
+	char* tmp = malloc(size);
+	if (tmp == 0)
+		return;
 
-		string_list_add(list, buffer);
+	for (size_t last = length - 1; last > 0; last--) {
+		for (size_t i = 0; i < last; i++) {
+			char* first = (char*)array + i * size;
+			char* second = first + size;
+			if (compare(first, second) > 0) {
+				memcpy(tmp, first, size);
+				memcpy(first, second, size);
+				memcpy(second, tmp, size);
+			}
+		}
 	}
 
-	struct StringListNode* node;
-	if (string_list_try_find(list, "aaa", &node))
-		printf("value: %s, next: %p", node->value, node->next);
+	free(tmp);
+}
+
+int int_compare(int* a, int* b)
+{
+	return *a - *b;
+}
+
+int str_compare(char** a, char** b)
+{
+	return strcmp(*a, *b);
+}
+
+int float_compare(float a, float b)
+{
+	if (a > b)
+		return 1;
+
+	if (a < b)
+		return -1;
+
+	return 0;
+}
+
+int double_compare(double a, double b)
+{
+	if (a > b)
+		return 1;
+
+	if (a < b)
+		return -1;
+
+	return 0;
+};
+
+int main()
+{
+	int (*dbl_cmp)(double, double);
+
+	dbl_cmp = double_compare;
+	printf("%d\n", dbl_cmp(1.0, 2.0));
+
+	int a[] = { 10, 3, 8, 4, 7, 6, 6, 3, 2, 8, 1 };
+	//int_bubble_sort(a, sizeof(a)/sizeof(int));
+	bubble_sort(a, sizeof(a) / sizeof(int), sizeof(int), int_compare);
+	for (int i = 0; i < sizeof(a) / sizeof(int); i++)
+		printf("%d\n", a[i]);
+
+	char* s[] = { "foo", "bar", "baz", "qux" };
+	//string_bubble_sort(s, sizeof(s) / sizeof(char*));
+	bubble_sort(s, sizeof(s) / sizeof(char*), sizeof(char*), str_compare);
+	for (int i = 0; i < sizeof(s) / sizeof(char*); i++)
+		printf("%s\n", s[i]);
+
+	//struct StringList* list = string_list_create();
+	//char buffer[1000];
+
+	//while (1) {
+	//	gets(buffer);
+
+	//	if (strcmp(buffer, "") == 0)
+	//		break;
+
+	//	string_list_add(list, buffer);
+	//}
+
+	//struct StringListNode* node;
+	//if (string_list_try_find(list, "aaa", &node))
+	//	printf("value: %s, next: %p", node->value, node->next);
 
 	//struct IntList* list = int_list_create();
 	//int_list_add(list, 123);
