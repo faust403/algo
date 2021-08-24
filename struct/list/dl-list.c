@@ -36,18 +36,9 @@ void add_to_DL_List(struct DL_List * dl_list, char * value)
 		return;
 	}
 	
-	if(dl_list->head->next == NULL)
-	{
-		dl_list->head->next = dl_node;
-		dl_node->previous = dl_list->head;
-		return;	
-	}
-
-	dl_list->head->next->previous = dl_node;
-	dl_node->next = dl_list->head->next;
-
-	dl_list->head->next = dl_node;
-	dl_node->previous = dl_list->head;
+	dl_node->next = dl_list->head;
+	dl_list->head->previous = dl_node;
+	dl_list->head = dl_node;
 }
 
 void remove_from_DL_List(struct DL_List * dl_list, char * value)
@@ -66,6 +57,7 @@ void remove_from_DL_List(struct DL_List * dl_list, char * value)
                 		dl_list->head = currentDLNode->next;
                 		
 				free(currentDLNode);
+				currentDLNode = NULL;
                 		
 				return;
         		}
@@ -74,14 +66,15 @@ void remove_from_DL_List(struct DL_List * dl_list, char * value)
 				currentDLNode->previous->next = NULL;
 
 				free(currentDLNode);
+				currentDLNode = NULL;
 				
 				return;
 			}
 			currentDLNode->previous->next = currentDLNode->next;
 			currentDLNode->next->previous = currentDLNode->previous;
 			
-			free(currentDLNode->value);
 			free(currentDLNode);
+			currentDLNode = NULL;
 			
 			return;
 		}
@@ -121,6 +114,7 @@ void free_DL_List(struct DL_List * dl_list)
 {
 	clear_DL_List(dl_list);
 	free(dl_list);
+	dl_list = NULL;
 }
 
 unsigned int DL_List_size(struct DL_List * dl_list)
