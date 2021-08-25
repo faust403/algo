@@ -9,5 +9,7 @@ struct List * create_CL_list();
 void add_to_CL_DL_List(struct DL_List * dl_list, char * value);
 void remove_from_CL_DL_List(struct DL_List * dl_list, char * value);
 void print_list(struct DL_List * dl_list);
+void clear_CL_List(struct DL_List * dl_list);
+void free_CL_List(struct DL_List * dl_list);
 
 #endif
