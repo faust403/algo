@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "dl-list.h"
+#include "../../util/util.h"
 
 struct DL_Node * create_DL_Node(void * value)
 {
@@ -81,7 +84,6 @@ void remove_from_DL_List(struct DL_List * dl_list, void * value)
 		currentDLNode = currentDLNode->next;
 	}
 }
-
 void clear_DL_List(struct DL_List * dl_list)
 {
 	if(dl_list == NULL || dl_list->head == NULL)

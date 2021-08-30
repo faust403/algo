@@ -3,7 +3,7 @@
 
 struct DL_Node
 {
-	char value[0];
+	void * value;
 	struct DL_Node * next;
 	struct DL_Node * previous;
 };
