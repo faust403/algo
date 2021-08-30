@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "dl-list.h"
 
-struct DL_Node * create_DL_Node(char * value)
+struct DL_Node * create_DL_Node(void * value)
 {
 	struct DL_Node * dl_node = (struct DL_Node *)malloc(sizeof(struct DL_Node));
 	dl_node->value = value;
@@ -20,7 +20,7 @@ struct DL_List * create_DL_List()
 	return dl_list;
 }
 
-void add_to_DL_List(struct DL_List * dl_list, char * value)
+void add_to_DL_List(struct DL_List * dl_list, void * value)
 {
         struct DL_Node * dl_node = create_DL_Node(value);
 
@@ -41,7 +41,7 @@ void add_to_DL_List(struct DL_List * dl_list, char * value)
 	dl_list->head = dl_node;
 }
 
-void remove_from_DL_List(struct DL_List * dl_list, char * value)
+void remove_from_DL_List(struct DL_List * dl_list, void * value)
 {
 	if(dl_list == NULL || dl_list->head == NULL)
 		return;
@@ -78,19 +78,6 @@ void remove_from_DL_List(struct DL_List * dl_list, char * value)
 			
 			return;
 		}
-		currentDLNode = currentDLNode->next;
-	}
-}
-
-void print_DL_List(struct DL_List * dl_list)
-{
-	if(dl_list == NULL || dl_list->head == NULL)
-		return;
-
-	struct DL_Node * currentDLNode = dl_list->head;
-	while(currentDLNode != NULL)
-	{
-		printf("%s", currentDLNode->value);
 		currentDLNode = currentDLNode->next;
 	}
 }
