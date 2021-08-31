@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "dl-list.h"
-#include "../../util/util.h"
 
 struct DL_Node * create_DL_Node(void * value)
 {
