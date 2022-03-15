@@ -18,8 +18,8 @@ static struct Pair* pair_create(const char* key, const char* value)
 		return 0;
 
 	result->key_size = key_size;
-	strcpy_s(result->key_value, key_size, key);
-	strcpy_s(result->key_value + result->key_size, value_size, value);
+	strncpy(result->key_value, key_size, key);
+	strncpy(result->key_value + result->key_size, value_size, value);
 
 	return result;
 }

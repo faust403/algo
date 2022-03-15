@@ -2,7 +2,10 @@
 /.vscode
 /Debug
 /Release
-
+CMakeCache.txt
+cmake_install.cmake
+-ld
+/cpp_real/CMakeFiles
 *.obj
 *.exe
 

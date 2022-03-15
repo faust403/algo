@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include <string.h>
 
-#include "list.h"
+#include "liner-list.h"
 
 struct StringList* string_list_create() 
 {
@@ -148,7 +148,7 @@ static struct ListNode* create_node_string(const void* value)
 		return 0;
 
 	result->next = 0;
-	strcpy_s(result->value, string_size, value);
+	strncpy(result->value, string_size, value);
 
 	return result;
 }
@@ -192,7 +192,7 @@ struct List* list_create_string()
 	return result;
 }
 
-void list_add(struct List* list, void* value)
+void list_add(struct List* list, const void* value)
 {
 	if (list == 0 || value == 0)
 		return;

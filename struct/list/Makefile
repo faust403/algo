@@ -1,4 +1,4 @@
-SOURCES= ./struct/singleLink-list/list.c ./struct/hash-table/hash.c ./algorithm/bubble-sort.c main.c
+SOURCES= dl-list.c liner-list.c cl-list.c main.c
 
 EXECUTABLE=main
 
